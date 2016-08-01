@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Menu, shell } from 'electron';
+import runTwitterService from './services/stream';
 
 let menu;
 let template;
@@ -38,8 +39,10 @@ app.on('ready', async () => {
     show: false,
     width: 1024,
     height: 728,
-    minWidth: 1024
+    // minWidth: 1024
   });
+
+  runTwitterService();
 
   mainWindow.loadURL(`file://${__dirname}/app/app.html`);
 

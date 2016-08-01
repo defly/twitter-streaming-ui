@@ -7,9 +7,11 @@ import routes from './routes';
 import configureStore from './store/configureStore';
 import './app.global.css';
 import './resources/photon-ui/css/photon.global.css';
+import storage from 'electron-json-storage';
 
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
+window.storage = storage;
 
 render(
   <Provider store={store}>

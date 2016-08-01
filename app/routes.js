@@ -1,11 +1,12 @@
 import React from 'react';
-import { Route, IndexRedirect, Redirect } from 'react-router';
+import { Route, IndexRoute, IndexRedirect, Redirect } from 'react-router';
 import App from './containers/App';
 import TwitterDetails from './containers/TwitterDetails';
+import Workplace from './containers/Workplace';
 
 export default (
   <Route path="/" component={App}>
-    <Redirect to="/twitter-details" />
+    <IndexRoute component={Workplace} />
     <Route path="twitter-details" component={TwitterDetails} />
   </Route>
 );

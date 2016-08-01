@@ -1,49 +1,68 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link, IndexLink } from 'react-router';
 import classNames from 'classnames';
 
 class NavItem extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
+    index: PropTypes.bool,
     icon: PropTypes.string,
     path: PropTypes.string,
     title: PropTypes.string
   }
 
   render() {
-    const { disabled, icon, path, title } = this.props;
+    const { disabled, icon, path, title, index } = this.props;
     const iconSpan = <span className={`icon ${icon}`}></span>;
+    const createDisabled = () => (
+      <span className={classNames({ 'nav-group-item': true, 'nav-group-item_disabled': disabled })}>
+        {iconSpan}
+        {title}
+      </span>
+    );
+    const createLink = (i) => (
+      <Link
+        to={path}
+        activeClassName="active"
+        className={classNames({ 'nav-group-item': true })}
+        onlyActiveOnIndex={i}
+      >
+        {iconSpan}
+        {title}
+      </Link>
+    );
+
     return (
       <span>
-        {disabled ? (
-          <span className={classNames({'nav-group-item': true, 'nav-group-item_disabled': disabled})}>
-            {iconSpan}
-            {title}
-          </span>
-        ) : (
-          <Link
-            to={path}
-            activeClassName="active"
-            className={classNames({ 'nav-group-item': true })}
-          >
-            {iconSpan}
-            {title}
-          </Link>
-        )}
+        {disabled ? createDisabled() : createLink(index)}
       </span>
     );
   }
 }
 
 class Nav extends Component {
+  static contextTypes = {
+    router: PropTypes.object
+  }
+  // componentWillMount() {
+  //   const { checkTwitterCredentials } = this.props;
+  //   checkTwitterCredentials();
+  // }
+  // componentDidMount() {
+  //   const { twitter, loadTwitterCredentials } = this.props;
+  //   console.log('t', twitter);
+  //   if (twitter.missing) {
+  //     this.context.router.push('twitter-details');
+  //   } else {
+  //     loadTwitterCredentials();
+  //   }
+  // }
   render() {
-    const disabled = true;
-    console.log(this.props)
+    const { twitter: { missing } } = this.props;
     return (
       <nav className="nav-group padded-vertically">
-        <NavItem path="/workplace" icon="icon-home" title="Workplace" disabled={disabled} />
+        <NavItem path="/" icon="icon-home" title="Workplace" index={true} disabled={missing} />
         <NavItem path="/twitter-details" icon="icon-cog" title="Twitter API Settings" />
-        <NavItem path="/help" icon="icon-help" title="Help" />
       </nav>
     );
   }
