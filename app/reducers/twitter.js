@@ -2,11 +2,15 @@ import {
   NO_TWITTER_CREDENTIALS,
   HAS_TWITTER_CREDENTIALS,
   SAVED_TWITTER_CREDENTIALS,
-  TWITTER_CREDENTIALS_LOADED
+  TWITTER_CREDENTIALS_LOADED,
+  NEW_TWEET_RECEIVED,
+  START_TWITTER_STREAM,
+  STOP_TWITTER_STREAM
 } from '../actions/twitter';
 
 const initial = {
-  // missing: true
+  tweets: [],
+  live: false
 };
 
 export default function twitter(state = initial, action) {
@@ -33,6 +37,21 @@ export default function twitter(state = initial, action) {
         ...state,
         loaded: true,
         credentials: action.payload
+      };
+    case START_TWITTER_STREAM:
+      return {
+        ...state,
+        live: true
+      };
+    case STOP_TWITTER_STREAM:
+      return {
+        ...state,
+        live: false
+      };
+    case NEW_TWEET_RECEIVED:
+      return {
+        ...state,
+        tweets: [action.payload].concat(state.tweets)
       };
     default:
       return state;

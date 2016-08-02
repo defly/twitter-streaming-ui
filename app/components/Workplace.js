@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import TwitterQueryForm from './TwitterQueryForm';
+import Tweets from './Tweets';
 
 export default class Workplace extends Component {
   static propTypes = {
@@ -38,12 +39,19 @@ export default class Workplace extends Component {
     const query = twitter_query_form.values.query;
     console.log(twitter)
     const { credentials } = twitter;
-    runQuery({query, credentials});
+    runQuery({ query, credentials });
+  }
+  stopQuery() {
+    const { stopQuery } = this.props;
+    stopQuery();
   }
   render() {
+    const { twitter } = this.props;
+    // console.log(this.props)
     return (
       <div className="padded-vertically">
-        <TwitterQueryForm handleSubmit={this.runQuery.bind(this)} />
+        <TwitterQueryForm live={twitter.live} stop={this.stopQuery.bind(this)} handleSubmit={this.runQuery.bind(this)} />
+        <Tweets tweets={twitter.tweets} />
       </div>
     );
   }

@@ -10,3 +10,25 @@
   pointer-events: none;
   opacity: 0.5;
 }
+
+.form-control.twitter-query {
+  width: 80%;
+  font-size: 1.2em;
+}
+
+.btn.btn-twitter {
+  margin-left: 1em;
+  font-size: 1.2em;
+}
+
+.form-group.twitter-query-form-group {
+  overflow: hidden;
+}
+
+.twitter-main {
+  background-color: #f5f5f4;
+}
+
+.twitter-table {
+  table-layout: fixed;
+}

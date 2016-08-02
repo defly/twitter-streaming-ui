@@ -7,7 +7,8 @@ export const NO_TWITTER_CREDENTIALS = 'NO_TWITTER_CREDENTIALS';
 export const HAS_TWITTER_CREDENTIALS = 'HAS_TWITTER_CREDENTIALS';
 export const SAVED_TWITTER_CREDENTIALS = 'SAVED_TWITTER_CREDENTIALS';
 export const START_TWITTER_STREAM = 'START_TWITTER_STREAM';
-// export const START_TWITTER_STREAM = 'START_TWITTER_STREAM';
+export const STOP_TWITTER_STREAM = 'STOP_TWITTER_STREAM';
+export const NEW_TWEET_RECEIVED = 'NEW_TWEET_RECEIVED';
 
 const TWITTER_CREDENTIALS_KEY = 'twitter_credentials';
 
@@ -72,11 +73,29 @@ export function runQuery(params) {
     });
 
     ipcRenderer.send('stream:start', params);
-    ipcRenderer.on('stream:tweet', (event, tweet) => {
-      console.log(tweet.text);
-    });
-    ipcRenderer.on('stream:error', (event, err) => {
-      console.error(err);
+
+    if (!ipcRenderer.lockStream) {
+      ipcRenderer.on('stream:tweet', (event, tweet) => {
+        dispatch({
+          type: NEW_TWEET_RECEIVED,
+          payload: tweet
+        });
+      });
+
+      ipcRenderer.on('stream:error', (event, err) => {
+        console.error(err);
+      });
+
+      ipcRenderer.lockStream = true;
+    }
+  };
+}
+
+export function stopQuery() {
+  return (dispatch) => {
+    ipcRenderer.send('stream:stop', true);
+    dispatch({
+      type: STOP_TWITTER_STREAM
     });
   };
 }

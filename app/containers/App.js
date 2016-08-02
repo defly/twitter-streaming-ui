@@ -14,7 +14,7 @@ export default class App extends Component {
             <div className="pane pane-sm sidebar">
               <Nav />
             </div>
-            <div className="pane">
+            <div className="pane twitter-main">
               {this.props.children}
             </div>
           </div>

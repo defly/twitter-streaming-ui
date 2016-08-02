@@ -7,7 +7,7 @@ function mapStateToProps(state) {
   return {
     twitter: state.twitter,
     routing: state.routing,
-    twitter_query_form: state.form.twitter_query_form
+    twitter_query_form: state.form.twitter_query_form,
   };
 }
 
