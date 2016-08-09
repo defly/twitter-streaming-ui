@@ -44,19 +44,6 @@ class Nav extends Component {
   static contextTypes = {
     router: PropTypes.object
   }
-  // componentWillMount() {
-  //   const { checkTwitterCredentials } = this.props;
-  //   checkTwitterCredentials();
-  // }
-  // componentDidMount() {
-  //   const { twitter, loadTwitterCredentials } = this.props;
-  //   console.log('t', twitter);
-  //   if (twitter.missing) {
-  //     this.context.router.push('twitter-details');
-  //   } else {
-  //     loadTwitterCredentials();
-  //   }
-  // }
   render() {
     const { twitter: { missing } } = this.props;
     return (

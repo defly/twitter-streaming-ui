@@ -3,7 +3,7 @@ import {
   HAS_TWITTER_CREDENTIALS,
   SAVED_TWITTER_CREDENTIALS,
   TWITTER_CREDENTIALS_LOADED,
-  NEW_TWEET_RECEIVED,
+  NEW_TWEETS_RECEIVED,
   START_TWITTER_STREAM,
   STOP_TWITTER_STREAM
 } from '../actions/twitter';
@@ -48,10 +48,11 @@ export default function twitter(state = initial, action) {
         ...state,
         live: false
       };
-    case NEW_TWEET_RECEIVED:
+    case NEW_TWEETS_RECEIVED:
       return {
         ...state,
-        tweets: [action.payload].concat(state.tweets)
+        tweets: action.payload.concat(state.tweets)
+        // tweets: state.tweets.concat([action.payload])
       };
     default:
       return state;

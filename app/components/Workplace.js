@@ -47,11 +47,25 @@ export default class Workplace extends Component {
   }
   render() {
     const { twitter } = this.props;
+    const { tweets } = twitter;
+    const count = tweets.length;
+    const hasTweets = count > 0;
     // console.log(this.props)
     return (
       <div className="padded-vertically">
-        <TwitterQueryForm live={twitter.live} stop={this.stopQuery.bind(this)} handleSubmit={this.runQuery.bind(this)} />
-        <Tweets tweets={twitter.tweets} />
+        <div className="pane-group">
+          <div className="pane">
+            <TwitterQueryForm
+              live={twitter.live}
+              stop={this.stopQuery.bind(this)}
+              handleSubmit={this.runQuery.bind(this)}
+            />
+            {hasTweets && <Tweets tweets={twitter.tweets} />}
+          </div>
+          <div className="pane pane-sm sidebar">
+            <span>Count: {count}</span>
+          </div>
+        </div>
       </div>
     );
   }

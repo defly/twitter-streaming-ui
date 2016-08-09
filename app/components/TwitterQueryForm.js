@@ -3,8 +3,8 @@ import { Field, reduxForm } from 'redux-form';
 
 const TwitterQueryForm = (props) => {
   const { handleSubmit, pristine, reset, submitting, live, stop } = props;
-  const stopButton = <div className="btn btn-large btn-form btn-default pull-left btn-twitter" onClick={stop}>Stop</div>;
-  const runButton = <button type="submit" className="btn btn-large btn-form btn-default pull-left btn-twitter">Run</button>;
+  const stopButton = <div className="btn btn-large btn-form btn-negative pull-left btn-twitter" onClick={stop}>Stop</div>;
+  const runButton = <button type="submit" className="btn btn-large btn-form btn-positive pull-left btn-twitter">Run</button>;
 
   return (
     <div className="padded-horizontally-more ">

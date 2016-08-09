@@ -1,5 +1,6 @@
 import storage from 'electron-json-storage';
 import { ipcRenderer } from 'electron';
+import Rx from 'rx';
 
 export const GET_TWITTER_CREDENTIALS = 'GET_TWITTER_CREDENTIALS';
 export const TWITTER_CREDENTIALS_LOADED = 'TWITTER_CREDENTIALS_LOADED';
@@ -8,7 +9,7 @@ export const HAS_TWITTER_CREDENTIALS = 'HAS_TWITTER_CREDENTIALS';
 export const SAVED_TWITTER_CREDENTIALS = 'SAVED_TWITTER_CREDENTIALS';
 export const START_TWITTER_STREAM = 'START_TWITTER_STREAM';
 export const STOP_TWITTER_STREAM = 'STOP_TWITTER_STREAM';
-export const NEW_TWEET_RECEIVED = 'NEW_TWEET_RECEIVED';
+export const NEW_TWEETS_RECEIVED = 'NEW_TWEETS_RECEIVED';
 
 const TWITTER_CREDENTIALS_KEY = 'twitter_credentials';
 
@@ -75,12 +76,25 @@ export function runQuery(params) {
     ipcRenderer.send('stream:start', params);
 
     if (!ipcRenderer.lockStream) {
-      ipcRenderer.on('stream:tweet', (event, tweet) => {
-        dispatch({
-          type: NEW_TWEET_RECEIVED,
-          payload: tweet
+      const source = Rx.Observable.create((observer) => {
+        ipcRenderer.on('stream:tweet', (event, tweet) => {
+          observer.onNext(tweet);
         });
+        return function () {
+          console.log('disposed');
+        };
       });
+
+      source
+        .bufferWithTime(300)
+        .filter(b => b.length > 0)
+        .subscribe(tweets => {
+          dispatch({
+            type: NEW_TWEETS_RECEIVED,
+            payload: tweets
+          });
+        });
+
 
       ipcRenderer.on('stream:error', (event, err) => {
         console.error(err);
