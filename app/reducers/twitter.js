@@ -51,8 +51,8 @@ export default function twitter(state = initial, action) {
     case NEW_TWEETS_RECEIVED:
       return {
         ...state,
-        tweets: action.payload.concat(state.tweets)
-        // tweets: state.tweets.concat([action.payload])
+        // tweets: action.payload.concat(state.tweets)
+        tweets: state.tweets.concat(action.payload)
       };
     default:
       return state;

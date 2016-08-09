@@ -7,6 +7,7 @@ import routes from './routes';
 import configureStore from './store/configureStore';
 import './app.global.css';
 import './resources/photon-ui/css/photon.global.css';
+import 'react-virtualized/styles.css';
 import storage from 'electron-json-storage';
 
 const store = configureStore();

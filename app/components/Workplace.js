@@ -3,6 +3,15 @@ import { Link } from 'react-router';
 import TwitterQueryForm from './TwitterQueryForm';
 import Tweets from './Tweets';
 
+const Stats = (props) => {
+  const { count } = props;
+  return (
+    <div className="pane pane-sm sidebar twitter-stats-bar">
+      <p className="padded-horizontally"><span>Count: <strong>{count}</strong></span></p>
+    </div>
+  );
+};
+
 export default class Workplace extends Component {
   static propTypes = {
     checkTwitterCredentials: PropTypes.func,
@@ -62,11 +71,11 @@ export default class Workplace extends Component {
             />
             {hasTweets && <Tweets tweets={twitter.tweets} />}
           </div>
-          <div className="pane pane-sm sidebar">
-            <span>Count: {count}</span>
-          </div>
+          {hasTweets && <Stats count={count} />}
         </div>
       </div>
     );
   }
 }
+
+

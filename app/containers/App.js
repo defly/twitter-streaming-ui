@@ -19,9 +19,6 @@ export default class App extends Component {
             </div>
           </div>
         </div>
-        <footer className="toolbar toolbar-footer">
-          <h1 className="title">Artem Bei</h1>
-        </footer>
       </div>
     );
   }

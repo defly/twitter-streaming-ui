@@ -1,39 +1,61 @@
 import React, { PropTypes } from 'react';
-import { VirtualScroll } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
+import { FlexTable, FlexColumn, AutoSizer } from 'react-virtualized';
 
-const rows = 100;
+const getUser = ({ rowData }) => rowData.user;
+const renderUser = ({ cellData }) => (
+  <div>
+    <strong>@{cellData.screen_name}</strong> ({cellData.friends_count}/{cellData.followers_count})
+  </div>
+);
+const getLocation = ({ rowData }) => rowData.user.location;
+const rowClassName = ({ index }) => {
+  if (index < 0) {
+    return 'twitter-grid-row_head';
+  } else {
+    return index % 2 === 0 ? 'twitter-grid-row_even' : 'twitter-grid-row_odd';
+  }
+};
 
-const Tweets = (props) => {
+const VirtualizedTweets = (props) => {
   const { tweets } = props;
-  const renderTweet = t => (
-    <tr key={`${t.id_str} ${Math.random()}`}>
-      <td>{t.user.screen_name}</td>
-      <td style={{ width: '800px' }}>{t.text}</td>
-      <td>{t.user.location}</td>
-    </tr>
-  );
   return (
-    <div className="padded-more twitter-table-container">
-      <table className="table-striped twitter-table" width="100%">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Text</th>
-            <th>Location</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tweets.slice(0, tweets.length > rows ? rows : tweets.length).map(renderTweet)}
-        </tbody>
-      </table>
-    </div>
+    <AutoSizer>
+    {({ height, width }) => (
+      <FlexTable
+        className="twitter-flex-table padded-horizontally-more"
+        gridClassName="twitter-grid"
+        rowClassName={rowClassName}
+        width={width}
+        height={height}
+        headerHeight={40}
+        rowHeight={40}
+        rowCount={tweets.length}
+        rowGetter={
+          ({ index }) => tweets[index]
+        }
+      >
+        <FlexColumn
+          label="User"
+          cellDataGetter={getUser}
+          cellRenderer={renderUser}
+          width={200}
+          dataKey="user"
+        />
+        <FlexColumn
+          width={600}
+          label="Text"
+          dataKey="text"
+        />
+        <FlexColumn
+          width={200}
+          label="Location"
+          dataKey="user"
+          cellDataGetter={getLocation}
+        />
+      </FlexTable>
+    )}
+    </AutoSizer>
   );
 };
 
-Tweets.propTypes = {
-  tweets: PropTypes.array
-};
-
-export default Tweets;
-
+export default VirtualizedTweets;
