@@ -1,6 +1,5 @@
 import storage from 'electron-json-storage';
-import { ipcRenderer } from 'electron';
-import Rx from 'rx';
+import { runDataSource, stopDataSource } from './../api/datasource';
 
 export const GET_TWITTER_CREDENTIALS = 'GET_TWITTER_CREDENTIALS';
 export const TWITTER_CREDENTIALS_LOADED = 'TWITTER_CREDENTIALS_LOADED';
@@ -15,7 +14,6 @@ export const CLEAR_TWEETS = 'CLEAR_TWEETS';
 const TWITTER_CREDENTIALS_KEY = 'twitter_credentials';
 
 export function checkTwitterCredentials() {
-  // storage.keys((err, keys) => console.log('keys', keys));
   return (dispatch) => {
     storage.has(TWITTER_CREDENTIALS_KEY, (err, hasKey) => {
       if (err) {
@@ -41,7 +39,6 @@ export function saveTwitterCredentials(credentials) {
     storage.set(TWITTER_CREDENTIALS_KEY, credentials, (err) => {
       if (err) {
         console.error(err);
-        // throw err;
       }
       dispatch(({
         type: SAVED_TWITTER_CREDENTIALS,
@@ -57,7 +54,6 @@ export function loadTwitterCredentials() {
     storage.get(TWITTER_CREDENTIALS_KEY, (err, data) => {
       if (err) {
         console.error(err);
-        // throw err;
       }
       dispatch(({
         type: TWITTER_CREDENTIALS_LOADED,
@@ -74,41 +70,18 @@ export function runQuery(params) {
       payload: params
     });
 
-    ipcRenderer.send('stream:start', params);
-
-    if (!ipcRenderer.lockStream) {
-      const source = Rx.Observable.create((observer) => {
-        ipcRenderer.on('stream:tweet', (event, tweet) => {
-          observer.onNext(tweet);
-        });
-        return function () {
-          console.log('disposed');
-        };
+    runDataSource(params, (err, tweets) => {
+      dispatch({
+        type: NEW_TWEETS_RECEIVED,
+        payload: tweets
       });
-
-      source
-        .bufferWithTime(1000)
-        .filter(b => b.length > 0)
-        .subscribe(tweets => {
-          dispatch({
-            type: NEW_TWEETS_RECEIVED,
-            payload: tweets
-          });
-        });
-
-
-      ipcRenderer.on('stream:error', (event, err) => {
-        console.error(err);
-      });
-
-      ipcRenderer.lockStream = true;
-    }
+    });
   };
 }
 
 export function stopQuery() {
   return (dispatch) => {
-    ipcRenderer.send('stream:stop', true);
+    stopDataSource();
     dispatch({
       type: STOP_TWITTER_STREAM
     });
