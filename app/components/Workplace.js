@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import TwitterQueryForm from './TwitterQueryForm';
 import Tweets from './Tweets';
+import Tools from './Tools';
 
 const Stats = (props) => {
   const { count } = props;
@@ -55,10 +56,11 @@ export default class Workplace extends Component {
     stopQuery();
   }
   render() {
-    const { twitter } = this.props;
-    const { tweets } = twitter;
+    const { twitter, clearTweets } = this.props;
+    const { tweets, cleared } = twitter;
     const count = tweets.length;
     const hasTweets = count > 0;
+    const showContents = hasTweets || cleared;
     // console.log(this.props)
     return (
       <div className="padded-vertically">
@@ -69,13 +71,12 @@ export default class Workplace extends Component {
               stop={this.stopQuery.bind(this)}
               handleSubmit={this.runQuery.bind(this)}
             />
+            {showContents && <Tools clearTweets={clearTweets} />}
             {hasTweets && <Tweets tweets={twitter.tweets} />}
           </div>
-          {hasTweets && <Stats count={count} />}
+          {showContents && <Stats count={count} />}
         </div>
       </div>
     );
   }
 }
-
-

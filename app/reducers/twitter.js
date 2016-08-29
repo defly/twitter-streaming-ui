@@ -5,12 +5,14 @@ import {
   TWITTER_CREDENTIALS_LOADED,
   NEW_TWEETS_RECEIVED,
   START_TWITTER_STREAM,
-  STOP_TWITTER_STREAM
+  STOP_TWITTER_STREAM,
+  CLEAR_TWEETS
 } from '../actions/twitter';
 
 const initial = {
   tweets: [],
-  live: false
+  live: false,
+  cleared: false
 };
 
 export default function twitter(state = initial, action) {
@@ -51,8 +53,13 @@ export default function twitter(state = initial, action) {
     case NEW_TWEETS_RECEIVED:
       return {
         ...state,
-        // tweets: action.payload.concat(state.tweets)
         tweets: state.tweets.concat(action.payload)
+      };
+    case CLEAR_TWEETS:
+      return {
+        ...state,
+        cleared: true,
+        tweets: []
       };
     default:
       return state;

@@ -19,42 +19,44 @@ const rowClassName = ({ index }) => {
 const VirtualizedTweets = (props) => {
   const { tweets } = props;
   return (
-    <AutoSizer>
-    {({ height, width }) => (
-      <FlexTable
-        className="twitter-flex-table padded-horizontally-more"
-        gridClassName="twitter-grid"
-        rowClassName={rowClassName}
-        width={width}
-        height={height}
-        headerHeight={40}
-        rowHeight={40}
-        rowCount={tweets.length}
-        rowGetter={
-          ({ index }) => tweets[index]
-        }
-      >
-        <FlexColumn
-          label="User"
-          cellDataGetter={getUser}
-          cellRenderer={renderUser}
-          width={200}
-          dataKey="user"
-        />
-        <FlexColumn
-          width={600}
-          label="Text"
-          dataKey="text"
-        />
-        <FlexColumn
-          width={200}
-          label="Location"
-          dataKey="user"
-          cellDataGetter={getLocation}
-        />
-      </FlexTable>
-    )}
-    </AutoSizer>
+    <div className="twitter-flex-table-wrapper">
+      <AutoSizer>
+      {({ height, width }) => (
+        <FlexTable
+          className="twitter-flex-table padded-horizontally-more"
+          gridClassName="twitter-grid"
+          rowClassName={rowClassName}
+          width={width}
+          height={height}
+          headerHeight={40}
+          rowHeight={40}
+          rowCount={tweets.length}
+          rowGetter={
+            ({ index }) => tweets[index]
+          }
+        >
+          <FlexColumn
+            label="User"
+            cellDataGetter={getUser}
+            cellRenderer={renderUser}
+            width={200}
+            dataKey="user"
+          />
+          <FlexColumn
+            width={600}
+            label="Text"
+            dataKey="text"
+          />
+          <FlexColumn
+            width={200}
+            label="Location"
+            dataKey="user"
+            cellDataGetter={getLocation}
+          />
+        </FlexTable>
+      )}
+      </AutoSizer>
+    </div>
   );
 };
 
