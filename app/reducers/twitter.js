@@ -12,7 +12,8 @@ import {
 const initial = {
   tweets: [],
   live: false,
-  cleared: false
+  cleared: false,
+  settings: []
 };
 
 export default function twitter(state = initial, action) {

@@ -10,8 +10,10 @@ export const START_TWITTER_STREAM = 'START_TWITTER_STREAM';
 export const STOP_TWITTER_STREAM = 'STOP_TWITTER_STREAM';
 export const NEW_TWEETS_RECEIVED = 'NEW_TWEETS_RECEIVED';
 export const CLEAR_TWEETS = 'CLEAR_TWEETS';
+export const SETTINGS_LOADED = 'SETTINGS_LOADED';
 
 const TWITTER_CREDENTIALS_KEY = 'twitter_credentials';
+const SETTINGS_KEY = 'settings';
 
 export function checkTwitterCredentials() {
   return (dispatch) => {
@@ -47,7 +49,6 @@ export function saveTwitterCredentials(credentials) {
     });
   };
 }
-
 
 export function loadTwitterCredentials() {
   return (dispatch) => {
@@ -92,6 +93,20 @@ export function clearTweets() {
   return (dispatch) => {
     dispatch({
       type: CLEAR_TWEETS
+    });
+  };
+}
+
+export function loadSettings() {
+  return (dispatch) => {
+    storage.get(SETTINGS_KEY, (err, data) => {
+      if (err) {
+        console.error(err);
+      }
+      dispatch(({
+        type: SETTINGS_LOADED,
+        payload: data
+      }));
     });
   };
 }

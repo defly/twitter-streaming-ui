@@ -61,7 +61,6 @@ export default class Workplace extends Component {
     const count = tweets.length;
     const hasTweets = count > 0;
     const showContents = hasTweets || cleared;
-    // console.log(this.props)
     return (
       <div className="padded-vertically">
         <div className="pane-group">
